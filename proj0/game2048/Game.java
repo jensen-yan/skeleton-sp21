@@ -35,6 +35,10 @@ public class Game {
             moved = false;
             while (!moved) {
                 String cmnd = _source.getKey();
+                if(cmnd == "向上箭头") cmnd = "Up";     // 兼容中文奇怪错误
+                if(cmnd == "向下箭头") cmnd = "Down";
+                if(cmnd == "向左箭头") cmnd = "Left";
+                if(cmnd == "向右箭头") cmnd = "Right";
                 switch (cmnd) {
                     case "Quit":
                         _playing = false;
