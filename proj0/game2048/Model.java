@@ -116,35 +116,9 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
         board.setViewingPerspective(side);
-
-        Set<Tile> MergedTile = new HashSet<>(); // 存放merge过的节点，不能继续merge
-        int sz = board.size();
-        for (int col = 0; col < sz; col++) {
-            for (int row = sz - 2; row >= 0 ; row--) {  // 从第二行向下看
-                Tile t = tile(col, row);
-                if (t == null) continue;
-                int targetRow = row + 1;
-                // 向上看最近的空位置, 遇到第一个非空的跳出or merge
-                for (int r = row + 1; r < sz; r++) {
-                    if(tile(col, r) != null){   // 遇到一个非空块
-                        if(tile(col, r).value() == t.value() && !MergedTile.contains(tile(col, r)))
-                            targetRow = r;  // 相同且没merge过，就merge
-                        else
-                            targetRow = r - 1;  // 移到非空的下面
-                        break;
-                    } else {    // 空的就更新row
-                        targetRow = r;
-                    }
-                }
-                boolean isMerged = board.move(col, targetRow, t);  // move会自动判断merge
-                if(isMerged){
-                    score += board.tile(col, targetRow).value();
-                    MergedTile.add(board.tile(col, targetRow));
-                }
-                changed = true;
-            }
+        for (int col = 0; col < board.size(); col++) {
+            changed |= tiltEachCol(col);
         }
-
         board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
@@ -153,6 +127,42 @@ public class Model extends Observable {
         }
         return changed;
     }
+
+    private boolean tiltEachCol(int col) {
+        boolean changed = false;
+        int sz = board.size();
+        Set<Tile> MergedTile = new HashSet<>(); // 存放merge过的节点，不能继续merge
+        for (int row = sz - 2; row >= 0 ; row--) {  // 从第二行向下看
+            Tile t = tile(col, row);
+            if (t == null) continue;
+            int targetRow = findTargetRow(t, col, row, MergedTile);
+            boolean isMerged = board.move(col, targetRow, t);  // move会自动判断merge
+            if(isMerged){
+                score += board.tile(col, targetRow).value();
+                MergedTile.add(board.tile(col, targetRow));
+            }
+            changed = true;
+        }
+        return changed;
+    }
+
+    private int findTargetRow(Tile t,int col, int row, Set<Tile> MergedTile) {
+        int targetRow = row + 1;
+        // 向上看最近的空位置, 遇到第一个非空的跳出or merge
+        for (int r = row + 1; r < board.size(); r++) {
+            if(tile(col, r) != null){   // 遇到一个非空块
+                if(tile(col, r).value() == t.value() && !MergedTile.contains(tile(col, r)))
+                    targetRow = r;  // 相同且没merge过，就merge
+                else
+                    targetRow = r - 1;  // 移到非空的下面
+                break;
+            } else {    // 空的就更新row
+                targetRow = r;
+            }
+        }
+        return targetRow;
+    }
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
