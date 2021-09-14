@@ -115,6 +115,8 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        board.setViewingPerspective(side);
+
         Set<Tile> MergedTile = new HashSet<>(); // 存放merge过的节点，不能继续merge
         int sz = board.size();
         for (int col = 0; col < sz; col++) {
@@ -130,17 +132,20 @@ public class Model extends Observable {
                         else
                             targetRow = r - 1;  // 移到非空的下面
                         break;
+                    } else {    // 空的就更新row
+                        targetRow = r;
                     }
                 }
                 boolean isMerged = board.move(col, targetRow, t);  // move会自动判断merge
                 if(isMerged){
-                    if(score < t.value() * 2)
-                        score = t.value() * 2;  // 更新最大score
+                    score += board.tile(col, targetRow).value();
                     MergedTile.add(board.tile(col, targetRow));
                 }
                 changed = true;
             }
         }
+
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
         if (changed) {
