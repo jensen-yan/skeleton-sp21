@@ -14,9 +14,11 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         ArrayDequeIterator(){
             index = 0;
         }
+        @Override
         public boolean hasNext(){
             return index < size;
         }
+        @Override
         public T next(){
             T item = get(index);
             index += 1;
@@ -60,6 +62,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
     }
 
+    @Override
     public void addFirst(T item) {
         if(size == items.length) resize(size*2);
         size += 1;
@@ -68,6 +71,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     /** Inserts X into the back of the list. */
+    @Override
     public void addLast(T item) {
         if(size == items.length) resize(size*2);
         size += 1;
@@ -76,6 +80,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     /** Gets the ith T in the list (0 is the front). */
+    @Override
     public T get(int i) {
         if(i >= size || i < 0) return null;
         int idx = (i+nextFirst+1)%items.length;
@@ -83,19 +88,22 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     /** Returns the number of items in the list. */
+    @Override
     public int size() {
         return size;
     }
 
-    public void printDeque() {
-        int idx = plusOne(nextFirst);
-        for (int i = 0; i < size; i++) {
-            System.out.print(items[idx] + " ");
-            idx = plusOne(idx);
-        }
-        System.out.println();
-    }
+//    @Override
+//    public void printDeque() {
+//        int idx = plusOne(nextFirst);
+//        for (int i = 0; i < size; i++) {
+//            System.out.print(items[idx] + " ");
+//            idx = plusOne(idx);
+//        }
+//        System.out.println();
+//    }
 
+    @Override
     public T removeFirst() {
         if(isEmpty()) return null;
         if((size < items.length / 4) && (size > 4)) resize(items.length / 4);
@@ -108,6 +116,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
     /** Deletes T from back of the list and
      * returns deleted T. */
+    @Override
     public T removeLast() {
         if(isEmpty()) return null;
         if((size < items.length / 4) && (size > 4)) resize(items.length / 4);
@@ -118,6 +127,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         return last;
     }
 
+    @Override
     public boolean equals(Object o){
         if(o == this) return true;
         if(!(o instanceof ArrayDeque)) return false;

@@ -11,7 +11,12 @@ public interface Deque<T> {
 
     int size();
 
-    void printDeque();
+    default void printDeque(){
+        for (int i = 0; i < size(); i++) {
+            System.out.print(get(i) + " ");
+        }
+        System.out.println();
+    }
 
     T removeFirst();
 

@@ -23,9 +23,11 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         LinkedListDequeIterator(){
             p = sentinel.next;
         }
+        @Override
         public boolean hasNext(){
             return p != sentinel;
         }
+        @Override
         public T next(){
             T item = p.item;
             p = p.next;
@@ -49,10 +51,12 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         size = 1;
     }
 
+    @Override
     public int size(){
         return size;
     }
 
+    @Override
     public void printDeque(){
         TNode p = sentinel.next;
         while (p.item != null){
@@ -62,6 +66,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         System.out.println();
     }
 
+    @Override
     public T get(int index){
         TNode p = sentinel.next;
         while (p.item != null){
@@ -83,6 +88,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     }
 
     /** adds x to front of List */
+    @Override
     public void addFirst(T x){
         size += 1;
         TNode p = new TNode(sentinel, x, sentinel.next);
@@ -90,6 +96,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         sentinel.next = p;
     }
 
+    @Override
     public T removeFirst(){
         if(isEmpty()) return null;
         size -= 1;
@@ -99,11 +106,8 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         return item;
     }
 
-    public T getFirst(){
-        return sentinel.next.item;
-    }
-
     /** adds an item to the end of last */
+    @Override
     public void addLast(T x){
         size += 1;
 
@@ -112,6 +116,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         sentinel.prev = p;
     }
 
+    @Override
     public T removeLast(){
         if(isEmpty()) return null;
         size -= 1;
@@ -121,10 +126,12 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         return item;
     }
 
+    @Override
     public Iterator<T> iterator(){
         return new LinkedListDequeIterator();
     }
 
+    @Override
     public boolean equals(Object o){
         if(o == null) return false;
         if(o == this) return true;
